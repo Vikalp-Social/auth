@@ -8,7 +8,7 @@ import authRouter from "./routers/auth.js";
 import healthRouter from "./routers/health.js";
 import registerRouter from "./routers/register.js";
 import metricRouter from "./routers/metric.js"
-import metricRouter from "./routers/lists.js"
+import listsRouter from "./routers/lists.js"
 
 import serverlessExpress from "aws-serverless-express";
 
