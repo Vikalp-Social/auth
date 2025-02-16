@@ -1,11 +1,9 @@
 import express from 'express';
 import axios from 'axios';
 import handleError from '../handleError.js';
-import {domain} from '../index.js';
 
-import { DynamoDBClient, ListTablesCommand } from '@aws-sdk/client-dynamodb';
-import { DynamoDBDocumentClient, ScanCommand, PutCommand } from '@aws-sdk/lib-dynamodb';
-import crypto from 'crypto'; // Native module, works with `import`
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb';
+import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 
 
 const metricRouter = express.Router();
@@ -16,13 +14,6 @@ const client = new DynamoDBClient({ region: 'eu-north-1' });
 
 const docClient = DynamoDBDocumentClient.from(client);
 
-
-// Function to generate SHA-256 hash
-const generateSHA256Hash = (input) => {
-  return crypto.createHash('sha256').update(input).digest('hex');
-};
-
-
 //log user entry to db
 metricRouter.post("/log/activeUser", async(req, res) => {
     const currentDate = new Date();
@@ -30,17 +21,25 @@ metricRouter.post("/log/activeUser", async(req, res) => {
     const hourPart = String(currentDate.getUTCHours()).padStart(2, '0'); // HH in UTC
     const formattedDateTime = `${datePart}-${hourPart}`; // Combine date and hour
 
-    if (!req.body.token) {
+    if (!req.body.uid) {
         return res.status(400).json({ error: 'Token is required' });
-        }
+    }
 
-    const userHash = generateSHA256Hash(req.body.token);
+    if (!req.body.exp) {
+        return res.status(400).json({ error: 'exp is required' });
+    }
+
+    if (!req.body.algo) {
+        return res.status(400).json({ error: 'algo is required' });
+    }
 
     const params = {
         TableName: 'vikalp_user_login',
         Item: {
             datetime : formattedDateTime,
-            user_token_sha256 : userHash
+            uid : req.body.uid,
+            exp: req.body.exp,
+            algo: req.body.algo
          },
       };
     
