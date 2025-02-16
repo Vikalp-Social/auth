@@ -9,12 +9,13 @@ import healthRouter from "./routers/health.js";
 import registerRouter from "./routers/register.js";
 import metricRouter from "./routers/metric.js"
 
+import serverlessExpress from "aws-serverless-express";
 
-export const domain = "http://localhost:3001";
-
-const ref = new Date(1/1/1970);
 
 const app = express();
+const port = process.env.PORT || 3000
+const ref = new Date(1/1/1970);
+export const domain = "https://srg.social";
 
 //middlewares
 app.use(statusMonitor());
@@ -30,8 +31,12 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/health", healthRouter);
 app.use("/api/v1/register", registerRouter);
 app.use("/api/v1/metric", metricRouter);
+app.use("/api/v1/lists", listsRouter);
 
-const port = 3000;
+const server = serverlessExpress.createServer(app);
+
+export const handler = (event, context) => serverlessExpress.proxy(server, event, context)
+
 app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+    console.log(`Listening on port ${port}`);
 });
