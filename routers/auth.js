@@ -15,7 +15,7 @@ authRouter.post("/", async(req, res) => {
         const response = await axios.post(`https://${req.body.instance}/oauth/token`, {
             client_id: req.body.id,
             client_secret: req.body.secret,
-            redirect_uri: `${domain}/auth`,
+            redirect_uri: `${domain}/auth/`,
             grant_type: "authorization_code",
             code: req.body.code,
             scope: "read write push",
