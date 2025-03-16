@@ -8,7 +8,8 @@ import cookieParser from "cookie-parser";
 import authRouter from "./routers/auth.js";
 import healthRouter from "./routers/health.js";
 import registerRouter from "./routers/register.js";
-import listsRouter from "./routers/lists.js";
+import metricRouter from "./routers/metric.js"
+import listsRouter from "./routers/lists.js"
 
 import serverlessExpress from "aws-serverless-express";
 
@@ -33,6 +34,7 @@ app.use(bodyParser.json());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/health", healthRouter);
 app.use("/api/v1/register", registerRouter);
+app.use("/api/v1/metric", metricRouter);
 app.use("/api/v1/lists", listsRouter);
 
 const server = serverlessExpress.createServer(app);
