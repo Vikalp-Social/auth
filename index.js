@@ -17,7 +17,8 @@ import serverlessExpress from "aws-serverless-express";
 const app = express();
 const port = process.env.PORT || 4000
 const ref = new Date(1/1/1970);
-export const domain = process.env.DOMAIN_STAGE;
+// export const domain = process.env.DOMAIN_STAGE;
+export const domain = 'http://localhost:3001';
 const algo = "hot";
 
 //middlewares
